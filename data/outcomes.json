@@ -1,0 +1,59 @@
+{
+  "rent": {
+    "desc": "House/flat rental price"
+  },
+  "food": {
+    "desc": "Food bought from supermarket"
+  },
+  "cloths": {
+    "desc": "Shopping cloths"
+  },
+  "alcohol": {
+    "desc": "Alcohol"
+  },
+  "cigarettes": {
+    "desc": "Cigarettes"
+  },
+  "ticket": {
+    "desc": "Communication tickets costs"
+  },
+  "internet": {
+    "desc": "Internet cost"
+  },
+  "repair": {
+    "desc": "Fixing stuff"
+  },
+  "car": {
+    "desc": "Car expenses"
+  },
+  "fuel": {
+    "desc": "Spending for car's fuel"
+  },
+
+  "holiday": {
+    "desc": "Holiday expenses"
+  },
+  "restaurant": {
+    "desc": "Expenses for restaurants"
+  },
+  "hobby": {
+    "desc": "Hobby spending"
+  },
+
+  "laptop": {
+    "desc": "New laptop price"
+  },
+  "smartphone": {
+    "desc": "New smartphone price"
+  },
+
+  "netflix": {
+    "desc": "Netflix subscription"
+  },
+  "hbo": {
+    "desc": "HBO subscription"
+  },
+  "spotify": {
+    "desc": "Spotify subscription"
+  }
+}

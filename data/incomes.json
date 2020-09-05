@@ -1,0 +1,14 @@
+{
+  "work": {
+    "desc": "Month salary"
+  },
+  "investing": {
+    "desc": "Income from investing"
+  },
+  "scholarship": {
+    "desc": "Scholarship"
+  },
+  "selling": {
+    "desc": "Earnings from selling stuff"
+  }
+}
