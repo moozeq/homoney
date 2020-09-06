@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from core.items import Item
+from src.items import Item
 
 months = {
     'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'

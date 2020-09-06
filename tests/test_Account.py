@@ -1,7 +1,7 @@
 import unittest
 
-from core.account import Account, months
-from core.items import Item, WrongTypeItem
+from src.account import Account, months
+from src.items import Item, WrongTypeItem
 
 
 class TestAccount(unittest.TestCase):
