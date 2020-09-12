@@ -11,7 +11,7 @@ class WrongEnvironment(Exception):
         env -- input environment value which cased exception
         message -- explanation of the error
     """
-    def __int__(self, env: str, message: str = 'Wrong environment, options = ["production", "development"]'):
+    def __init__(self, env: str, message: str = 'Wrong environment, options = ["production", "development"]'):
         self.env = env
         self.message = message
         super().__init__(self.message)
@@ -33,8 +33,42 @@ def create_app(cfg: dict):
     app.config['ENV'] = cfg['ENV']
 
     @app.route('/')
-    def hello_world():
-        return render_template('index.html', **{'greeting': 'Hello Flask!'})
+    def index():
+        return render_template('index.html')
+
+    @app.route('/api/incomes')
+    def incomes():
+        return {
+            'items': [
+                {
+                    'icon': 'mdi mdi-account',
+                    'msg': 'income 1'
+                },
+                {
+                    'icon': 'mdi mdi-account',
+                    'msg': 'income 2'
+                }
+            ]
+        }
+        
+    @app.route('/api/outcomes')
+    def outcomes():
+        return {
+            'items': [
+                {
+                    'icon': 'mdi mdi-account',
+                    'msg': 'outcome 1'
+                },
+                {
+                    'icon': 'mdi mdi-account',
+                    'msg': 'outcome 2'
+                },
+                {
+                    'icon': 'mdi mdi-account',
+                    'msg': 'outcome 3'
+                }
+            ]
+        }
 
     app.run(host=cfg['host'], port=cfg['port'])
 

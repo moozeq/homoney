@@ -4,21 +4,37 @@
     <meta charset="UTF-8">
     <title>Homoney</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
-</head>
-<body>
-
-    <div class="container">
-        <div class="ml-5 mt-5">
-            <div class="col-sm-6 card bg-info text-white">
-              <div class="card-header">Simple Hello Vue.js Application</div>
-              <div class="card-body" id="app">[[ message ]]</div>
-            </div>
-        </div>
-    </div>
 
     <!-- Load required Bootstrap and BootstrapVue CSS -->
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link type="text/css" rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                <h1>Incomes</h1>
+                <ul class="list-group" id="incomes">
+                    <li class="list-group-item list-group-item-action" v-for="item in items">
+                        <i v-bind:class="[[ item.icon ]]" aria-hidden="true"></i>
+                        [[ item.msg ]]
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md">
+                <h1>Outcomes</h1>
+                <ul class="list-group" id="outcomes">
+                    <li class="list-group-item list-group-item-action" v-for="item in items">
+                        <i v-bind:class="[[ item.icon ]]" aria-hidden="true"></i>
+                        [[ item.msg ]]
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <!-- Load Vue followed by BootstrapVue -->
     <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
