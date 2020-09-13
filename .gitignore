@@ -2,3 +2,5 @@ venv/
 .idea/
 .vscode/
 cfg.json
+src/__pycache__/account.cpython-37.pyc
+src/__pycache__/items.cpython-37.pyc

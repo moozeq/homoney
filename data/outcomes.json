@@ -1,59 +1,77 @@
 {
   "rent": {
-    "desc": "House/flat rental price"
+    "desc": "House/flat rental price",
+    "icon": "mdi mdi-home"
   },
   "food": {
-    "desc": "Food bought from supermarket"
+    "desc": "Food bought from supermarket",
+    "icon": "mdi mdi-food-apple"
   },
   "cloths": {
-    "desc": "Shopping cloths"
+    "desc": "Shopping cloths",
+    "icon": "mdi mdi-tie"
   },
   "alcohol": {
-    "desc": "Alcohol"
+    "desc": "Alcohol",
+    "icon": "mdi mdi-glass-tulip"
   },
   "cigarettes": {
-    "desc": "Cigarettes"
+    "desc": "Cigarettes",
+    "icon": "mdi mdi-smoking"
   },
   "ticket": {
-    "desc": "Communication tickets costs"
+    "desc": "Communication tickets costs",
+    "icon": "mdi mdi-ticket"
   },
   "internet": {
-    "desc": "Internet cost"
+    "desc": "Internet cost",
+    "icon": "mdi mdi-server-network"
   },
   "repair": {
-    "desc": "Fixing stuff"
+    "desc": "Fixing stuff",
+    "icon": "mdi mdi-engine"
   },
   "car": {
-    "desc": "Car expenses"
+    "desc": "Car expenses",
+    "icon": "mdi mdi-car"
   },
   "fuel": {
-    "desc": "Spending for car's fuel"
+    "desc": "Spending for car's fuel",
+    "icon": "mdi mdi-car"
   },
 
   "holiday": {
-    "desc": "Holiday expenses"
+    "desc": "Holiday expenses",
+    "icon": "mdi mdi-airplane"
   },
   "restaurant": {
-    "desc": "Expenses for restaurants"
+    "desc": "Expenses for restaurants",
+    "icon": "mdi mdi-silverware-variant"
   },
   "hobby": {
-    "desc": "Hobby spending"
+    "desc": "Hobby spending",
+    "icon": "mdi mdi-rocket"
   },
 
   "laptop": {
-    "desc": "New laptop price"
+    "desc": "New laptop price",
+    "icon": "mdi mdi-laptop"
   },
   "smartphone": {
-    "desc": "New smartphone price"
+    "desc": "New smartphone price",
+    "icon": "mdi mdi-cellphone"
   },
 
   "netflix": {
-    "desc": "Netflix subscription"
+    "desc": "Netflix subscription",
+    "icon": "mdi mdi-movie"
   },
   "hbo": {
-    "desc": "HBO subscription"
+    "desc": "HBO subscription",
+    "icon": "mdi mdi-movie"
   },
   "spotify": {
-    "desc": "Spotify subscription"
+    "desc": "Spotify subscription",
+    "icon": "mdi mdi-spotify"
   }
 }

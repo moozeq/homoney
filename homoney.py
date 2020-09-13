@@ -1,7 +1,12 @@
+#!/usr/bin/env python3
+
 import argparse
 import json
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+from src.account import Account
+from src.items import Item, WrongTypeItem
+from src.items import incomes as available_incomes, outcomes as available_outcomes
 
 
 class WrongEnvironment(Exception):
@@ -32,6 +37,8 @@ def create_app(cfg: dict):
 
     app.config['ENV'] = cfg['ENV']
 
+    acc = Account('1337')
+
     @app.route('/')
     def index():
         return render_template('index.html')
@@ -39,36 +46,46 @@ def create_app(cfg: dict):
     @app.route('/api/incomes')
     def incomes():
         return {
-            'items': [
-                {
-                    'icon': 'mdi mdi-account',
-                    'msg': 'income 1'
-                },
-                {
-                    'icon': 'mdi mdi-account',
-                    'msg': 'income 2'
-                }
-            ]
+            'items': acc.get_comes('in', 'web')['JAN']
         }
         
     @app.route('/api/outcomes')
     def outcomes():
         return {
-            'items': [
+            'items': acc.get_comes('out', 'web')['JAN']
+        }
+
+    @app.route('/api/available')
+    def available():
+        return {
+            'in': [
                 {
-                    'icon': 'mdi mdi-account',
-                    'msg': 'outcome 1'
-                },
+                    'value': come_name,
+                    'text': available_incomes[come_name]['desc'],
+                    'icon': available_incomes[come_name]['icon'],
+                } for come_name in available_incomes
+            ],
+            'out': [
                 {
-                    'icon': 'mdi mdi-account',
-                    'msg': 'outcome 2'
-                },
-                {
-                    'icon': 'mdi mdi-account',
-                    'msg': 'outcome 3'
-                }
+                    'value': come_name,
+                    'text': available_outcomes[come_name]['desc'],
+                    'icon': available_outcomes[come_name]['icon'],
+                } for come_name in available_outcomes
             ]
         }
+
+    @app.route('/api/add', methods=['POST'])
+    def add():
+        data = request.get_json()
+        item = Item(data['name'], data['item_type'], data['value'])
+        acc.add(item, data['date']['month'])
+
+        if item.type == 'in':
+            return item.web_data
+        elif item.type == 'out':
+            return item.web_data
+        else:
+            raise WrongTypeItem(f'Wrong item type: {item.type}')
 
     app.run(host=cfg['host'], port=cfg['port'])
 

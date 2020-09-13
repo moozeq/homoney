@@ -63,7 +63,39 @@
 
 
 
-
 h1 {
     text-align: center;
+}
+
+.item-icon {
+    float: left;
+}
+.item-desc {
+    float: left;
+    margin-left: 0.5em;
+}
+.item-value {
+    float: right;
+}
+.item-currency {
+    float: right;
+}
+
+.c-row-upper {
+    margin-top: 3vh;
+}
+.c-comes-list {
+    margin-top: 3vh;
+    height: 50vh;
+    overflow-y: auto;
+}
+.c-btn-add {
+
+}
+.c-btn-rm {
+
+}
+
+.c-new-item-select {
+    width: 30% !important;
 }

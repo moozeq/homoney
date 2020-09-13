@@ -1,14 +1,18 @@
 {
   "work": {
-    "desc": "Month salary"
+    "desc": "Month salary",
+    "icon": "mdi mdi-cash"
   },
   "investing": {
-    "desc": "Income from investing"
+    "desc": "Income from investing",
+    "icon": "mdi mdi-chart-line"
   },
   "scholarship": {
-    "desc": "Scholarship"
+    "desc": "Scholarship",
+    "icon": "mdi mdi-school"
   },
   "selling": {
-    "desc": "Earnings from selling stuff"
+    "desc": "Earnings from selling stuff",
+    "icon": "mdi mdi-shopping"
   }
 }

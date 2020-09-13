@@ -1,44 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Homoney</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+    <!-- Add this to <head> -->
 
     <!-- Load required Bootstrap and BootstrapVue CSS -->
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
-    <link type="text/css" rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" />
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+    <!-- Load axios for communication with server -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Load material design icons -->
+    <link type="text/css" rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" />
 </head>
 <body>
 
     <div class="container">
-        <div class="row">
+        <div class="row c-row-upper">
             <div class="col-md">
                 <h1>Incomes</h1>
-                <ul class="list-group" id="incomes">
+                <ul class="list-group c-comes-list" id="incomes">
                     <li class="list-group-item list-group-item-action" v-for="item in items">
-                        <i v-bind:class="[[ item.icon ]]" aria-hidden="true"></i>
-                        [[ item.msg ]]
+                        <i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i>
+                        <span class="item-desc">[[ item.desc ]]</span>
+                        <span class="item-value">[[ item.value ]]</span>
+                        <span class="item-currency">[[ item.currency ]]</span>
                     </li>
                 </ul>
             </div>
             <div class="col-md">
                 <h1>Outcomes</h1>
-                <ul class="list-group" id="outcomes">
+                <ul class="list-group c-comes-list" id="outcomes">
                     <li class="list-group-item list-group-item-action" v-for="item in items">
-                        <i v-bind:class="[[ item.icon ]]" aria-hidden="true"></i>
-                        [[ item.msg ]]
+                        <i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i>
+                        <span class="item-desc">[[ item.desc ]]</span>
+                        <span class="item-value">[[ item.value ]]</span>
+                        <span class="item-currency">[[ item.currency ]]</span>
                     </li>
                 </ul>
             </div>
         </div>
+        <div class="row c-row-upper" id="comes-menu">
+            <div class="col-md">
+                <b-input-group prepend="New income">
+                    <b-form-select v-model="incomes.selected" :options="incomes.options" class="c-new-item-select"></b-form-select>
+                    <b-form-input v-model="incomes.value" type="number"></b-form-input>
+                    <b-input-group-append>
+                        <b-button variant="success" v-on:click="add_item('in')">+</b-button>
+                    </b-input-group-append>
+                </b-input-group>
+            </div>
+            <div class="col-md">
+                <b-input-group prepend="New outcome">
+                    <b-form-select v-model="outcomes.selected" :options="outcomes.options" class="c-new-item-select"></b-form-select>
+                    <b-form-input v-model="outcomes.value" type="number"></b-form-input>
+                    <b-input-group-append>
+                        <b-button variant="success" v-on:click="add_item('out')">+</b-button>
+                    </b-input-group-append>
+                </b-input-group>
+            </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Load Vue followed by BootstrapVue -->
-    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
     <script src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
