@@ -68,11 +68,8 @@ h1 {
 }
 
 .item-icon {
-    float: left;
 }
 .item-desc {
-    float: left;
-    margin-left: 0.5em;
 }
 .item-value {
     float: right;
@@ -96,6 +93,15 @@ h1 {
 
 }
 
+.c-col {
+    margin: 0.5em;
+}
+
 .c-new-item-select {
     width: 30% !important;
+}
+
+.c-list-item:focus {
+    outline: none;
+    box-shadow: none;
 }

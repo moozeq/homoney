@@ -1,3 +1,5 @@
+var date = {'month': 'JAN'};
+
 var incomes = new Vue({
   el: '#incomes',
   data() {
@@ -11,6 +13,19 @@ var incomes = new Vue({
       .then(response => {
         this.items = response.data.items;
       })
+  },
+  methods: {
+    rm_item: function(id) {
+        axios
+          .post('/api/rm', {
+            'id': id,
+            'type': 'in',
+            'date': date
+          })
+          .then(response => {
+            this.$delete(this.items, id);
+          })
+    }
   },
   delimiters: ['[[', ']]']
 })
@@ -29,6 +44,19 @@ var outcomes = new Vue({
         this.items = response.data.items;
       })
   },
+  methods: {
+    rm_item: function(id) {
+        axios
+          .post('/api/rm', {
+            'id': id,
+            'type': 'out',
+            'date': date
+          })
+          .then(response => {
+            this.$delete(this.items, id);
+          })
+    }
+  },
   delimiters: ['[[', ']]']
 })
 
@@ -41,20 +69,14 @@ var incomes_menu = new Vue({
             { value: null, text: 'Select new income type' },
            ],
            selected: null,
-           value: 0,
-           date: {
-            'month': 'JAN'
-           }
+           value: 0
        },
        outcomes: {
            options: [
             { value: null, text: 'Select new outcome type' },
            ],
            selected: null,
-           value: 0,
-           date: {
-            'month': 'JAN'
-           }
+           value: 0
        },
      }
   },
@@ -108,14 +130,15 @@ var incomes_menu = new Vue({
             'name': container.selected,
             'item_type': type,
             'value': parseInt(container.value),
-            'date': container.date
+            'date': date
           })
           .then(response => {
-            data.items.push(response.data);
+            data.$set(data.items, response.data.id, response.data)
             this.$nextTick(() => {
                 data.$el.scrollTop = data.$el.scrollHeight;
             });
           })
     }
-  }
+  },
+  delimiters: ['[[', ']]']
 })

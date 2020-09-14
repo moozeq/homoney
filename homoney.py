@@ -5,7 +5,7 @@ import json
 
 from flask import Flask, render_template, request
 from src.account import Account
-from src.items import Item, WrongTypeItem
+from src.items import WrongTypeItem, WrongItem, Item
 from src.items import incomes as available_incomes, outcomes as available_outcomes
 
 
@@ -77,8 +77,10 @@ def create_app(cfg: dict):
     @app.route('/api/add', methods=['POST'])
     def add():
         data = request.get_json()
-        item = Item(data['name'], data['item_type'], data['value'])
-        acc.add(item, data['date']['month'])
+        item: Item = acc.add(data, data['date']['month'])
+
+        if not item:
+            raise WrongItem(f'Item could not be add')
 
         if item.type == 'in':
             return item.web_data
@@ -86,6 +88,12 @@ def create_app(cfg: dict):
             return item.web_data
         else:
             raise WrongTypeItem(f'Wrong item type: {item.type}')
+
+    @app.route('/api/rm', methods=['POST'])
+    def rm():
+        data = request.get_json()
+        deleted = acc.rm(data['id'], data['type'], data['date']['month'])
+        return {'success': deleted}, 200, {'ContentType': 'application/json'}
 
     app.run(host=cfg['host'], port=cfg['port'])
 

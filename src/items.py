@@ -12,11 +12,16 @@ class WrongTypeItem(Exception):
     pass
 
 
+class WrongItem(Exception):
+    pass
+
+
 class Item:
-    def __init__(self, name: str, item_type: str, value: float = 0.0):
+    def __init__(self, name: str, item_type: str, value: float, item_id: int):
         self.name = name
         self.value = value
         self.type = item_type
+        self.id = item_id
 
         if item_type == 'in' and name in incomes:
             item_data = incomes[name]
@@ -34,6 +39,7 @@ class Item:
     def web_data(self):
         return {
             **self.data,
+            'id': self.id,
             'name': self.name,
             'value': self.value,
             'currency': currency,

@@ -11,11 +11,11 @@ class TestAccount(unittest.TestCase):
     def test_add(self):
         for month in months:
             self.assertEqual(self.acc.balances[month], 0)
-            self.acc.add(Item('work', 'in', 1000), month)
+            self.acc.add(Item('work', 'in', 1000, 1), month)
             self.assertEqual(self.acc.balances[month], 1000)
-            self.acc.add(Item('food', 'out', 250), month)
+            self.acc.add(Item('food', 'out', 250, 2), month)
             self.assertEqual(self.acc.balances[month], 750)
-            self.acc.add(Item('food', 'out', 2000), month)
+            self.acc.add(Item('food', 'out', 2000, 3), month)
             self.assertEqual(self.acc.balances[month], -1250)
             self.acc.clear(month)
             self.assertEqual(self.acc.balances[month], 0)

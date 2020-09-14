@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from src.items import Item
 
@@ -7,7 +7,7 @@ months = {
 }
 
 
-class WrongComeType(Exception):
+class WrongDataType(Exception):
     pass
 
 
@@ -18,6 +18,7 @@ class Account:
     """
     def __init__(self, name: str):
         self.name = name
+        self.items_cnt = 0
         self._outcomes_items: Dict[str, List[Item]] = {month: [] for month in months}
         self._incomes_items: Dict[str, List[Item]] = {month: [] for month in months}
         self._items = {
@@ -37,7 +38,7 @@ class Account:
         elif come_type == 'out':
             items = self._outcomes_items
         else:
-            raise WrongComeType(f'Wrong come type provided: {come_type}')
+            raise WrongDataType(f'Wrong come type provided: {come_type}')
 
         if data_type == 'value':
             return {
@@ -51,11 +52,11 @@ class Account:
             }
         elif data_type == 'web':
             return {
-                month: [item.web_data for item in items[month]]
+                month: {item.id: item.web_data for item in items[month]}
                 for month in months
             }
         else:
-            raise WrongComeType(f'Wrong data type provided: {data_type}')
+            raise WrongDataType(f'Wrong data type provided: {data_type}')
 
     @property
     def balances(self) -> Dict[str, int]:
@@ -64,9 +65,25 @@ class Account:
             for month in months
         }
 
-    def add(self, item: Item, month: str):
+    def add(self, item: Union[Item, dict], month: str) -> Optional[Item]:
+        if isinstance(item, Item):
+            pass
+        elif isinstance(item, dict):
+            item = Item(item['name'], item['item_type'], item['value'], self.items_cnt)
+        else:
+            raise WrongDataType(f'Wrong item type, available = [Item, dict]; passed = {type(item)}')
+
         items = self._items[item.type][month]
+        # TODO check if no item with same id
         items.append(item)
+        self.items_cnt += 1
+        return item
+
+    def rm(self, item_id: int, item_type: str, month: str) -> bool:
+        prev_len = len(self._items[item_type][month])
+        self._items[item_type][month] = [item for item in self._items[item_type][month] if item.id != item_id]
+        cur_len = len(self._items[item_type][month])
+        return True if prev_len - cur_len > 0 else False
         
     def clear(self, month: str):
         for items_type in ['in', 'out']:

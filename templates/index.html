@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,45 +30,67 @@
 
     <div class="container">
         <div class="row c-row-upper">
-            <div class="col-md">
+            <div class="col-md c-col">
                 <h1>Incomes</h1>
-                <ul class="list-group c-comes-list" id="incomes">
-                    <li class="list-group-item list-group-item-action" v-for="item in items">
-                        <i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i>
-                        <span class="item-desc">[[ item.desc ]]</span>
-                        <span class="item-value">[[ item.value ]]</span>
-                        <span class="item-currency">[[ item.currency ]]</span>
-                    </li>
-                </ul>
+                <b-list-group class="c-comes-list border border-dark" id="incomes">
+                    <b-list-group-item class="list-group-item-action c-list-item" v-for="item in items" v-b-toggle="'item_' + [[ item.id ]] + '_collapse'">
+                        <b-row>
+                            <b-col cols="1"><i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i></b-col>
+                            <b-col cols="8"><span class="item-desc">[[ item.desc ]]</span></b-col>
+                            <b-col>
+                                <span class="item-currency">[[ item.currency ]]</span>
+                                <span class="item-value">[[ item.value ]]</span>
+                            </b-col>
+                        </b-row>
+                        <b-collapse v-bind:id="'item_' + [[ item.id ]] + '_collapse'">
+                            <b-row class="text-right c-row-upper">
+                                <b-col>
+                                      <b-button size="sm" variant="danger" @click.stop="rm_item(item.id)">Remove</b-button>
+                                </b-col>
+                            </b-row>
+                        </b-collapse>
+                    </b-list-group-item>
+                </b-list-group>
             </div>
-            <div class="col-md">
+            <div class="col-md c-col">
                 <h1>Outcomes</h1>
-                <ul class="list-group c-comes-list" id="outcomes">
-                    <li class="list-group-item list-group-item-action" v-for="item in items">
-                        <i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i>
-                        <span class="item-desc">[[ item.desc ]]</span>
-                        <span class="item-value">[[ item.value ]]</span>
-                        <span class="item-currency">[[ item.currency ]]</span>
-                    </li>
-                </ul>
+                <b-list-group class="c-comes-list border border-dark" id="outcomes">
+                    <b-list-group-item class="list-group-item-action c-list-item" v-for="item in items" v-b-toggle="'item_' + [[ item.id ]] + '_collapse'">
+                        <b-row>
+                            <b-col cols="1"><i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i></b-col>
+                            <b-col cols="8"><span class="item-desc">[[ item.desc ]]</span></b-col>
+                            <b-col>
+                                <span class="item-currency">[[ item.currency ]]</span>
+                                <span class="item-value">[[ item.value ]]</span>
+                            </b-col>
+                        </b-row>
+                        <b-collapse v-bind:id="'item_' + [[ item.id ]] + '_collapse'">
+                            <b-row class="text-right c-row-upper">
+                                <b-col>
+                                      <b-button size="sm" variant="danger" @click.stop="rm_item(item.id)">Remove</b-button>
+                                </b-col>
+                            </b-row>
+                        </b-collapse>
+                    </b-list-group-item>
+                </b-list-group>
             </div>
         </div>
         <div class="row c-row-upper" id="comes-menu">
-            <div class="col-md">
+            <div class="col-md c-col">
                 <b-input-group prepend="New income">
                     <b-form-select v-model="incomes.selected" :options="incomes.options" class="c-new-item-select"></b-form-select>
                     <b-form-input v-model="incomes.value" type="number"></b-form-input>
                     <b-input-group-append>
-                        <b-button variant="success" v-on:click="add_item('in')">+</b-button>
+                        <b-button variant="success" @click="add_item('in')">+</b-button>
                     </b-input-group-append>
                 </b-input-group>
             </div>
-            <div class="col-md">
+            <div class="col-md c-col">
                 <b-input-group prepend="New outcome">
                     <b-form-select v-model="outcomes.selected" :options="outcomes.options" class="c-new-item-select"></b-form-select>
                     <b-form-input v-model="outcomes.value" type="number"></b-form-input>
                     <b-input-group-append>
-                        <b-button variant="success" v-on:click="add_item('out')">+</b-button>
+                        <b-button variant="danger" @click="add_item('out')">+</b-button>
                     </b-input-group-append>
                 </b-input-group>
             </div>
