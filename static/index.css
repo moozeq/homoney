@@ -71,15 +71,20 @@ h1 {
 }
 .item-desc {
 }
-.item-value {
+.item-value-in {
     float: right;
+    color: green;
 }
-.item-currency {
+.item-value-out {
     float: right;
+    color: red;
 }
 
 .c-row-upper {
     margin-top: 3vh;
+}
+.c-row-down {
+    margin-bottom: 3vh;
 }
 .c-comes-list {
     margin-top: 3vh;
@@ -104,4 +109,9 @@ h1 {
 .c-list-item:focus {
     outline: none;
     box-shadow: none;
+}
+
+.c-badge {
+    width: 100%;
+    font-size: 85% !important;
 }

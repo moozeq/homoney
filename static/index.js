@@ -137,8 +137,43 @@ var incomes_menu = new Vue({
             this.$nextTick(() => {
                 data.$el.scrollTop = data.$el.scrollHeight;
             });
+            comes_stats.update_balance();
           })
     }
+  },
+  delimiters: ['[[', ']]']
+})
+
+var navbar = new Vue({
+  el: '#navbar'
+})
+
+var comes_stats = new Vue({
+  el: '#comes-stats',
+  data() {
+    return {
+        summary: {
+            income: null,
+            outcome: null,
+            balance: null,
+            currency: null
+        }
+    }
+  },
+  methods: {
+    update_balance() {
+        axios
+          .get('/api/balance')
+          .then(response => {
+                this.summary.income = response.data.income;
+                this.summary.outcome = response.data.outcome;
+                this.summary.balance = response.data.balance;
+                this.summary.currency = response.data.currency;
+          })
+    }
+  },
+  mounted: function() {
+    this.update_balance()
   },
   delimiters: ['[[', ']]']
 })

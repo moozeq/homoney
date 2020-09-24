@@ -55,6 +55,15 @@ def create_app(cfg: dict):
             'items': acc.get_comes('out', 'web')['JAN']
         }
 
+    @app.route('/api/balance')
+    def balance():
+        return {
+            'income': acc.get_comes('in', 'value')['JAN'],
+            'outcome': acc.get_comes('out', 'value')['JAN'],
+            'balance': acc.balances['JAN'],
+            'currency': '$'
+        }
+
     @app.route('/api/available')
     def available():
         return {

@@ -28,6 +28,10 @@
 </head>
 <body>
 
+    <b-navbar toggleable="lg" type="dark" variant="dark" id="navbar">
+        <b-navbar-brand href="#">Homoney</b-navbar-brand>
+    </b-navbar>
+
     <div class="container">
         <div class="row c-row-upper">
             <div class="col-md c-col">
@@ -38,8 +42,7 @@
                             <b-col cols="1"><i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i></b-col>
                             <b-col cols="8"><span class="item-desc">[[ item.desc ]]</span></b-col>
                             <b-col>
-                                <span class="item-currency">[[ item.currency ]]</span>
-                                <span class="item-value">[[ item.value ]]</span>
+                                <span class="item-value-in">[[ item.value ]][[ item.currency ]]</span>
                             </b-col>
                         </b-row>
                         <b-collapse v-bind:id="'item_' + [[ item.id ]] + '_collapse'">
@@ -60,8 +63,7 @@
                             <b-col cols="1"><i v-bind:class="[[ item.icon ]]" class="item-icon" aria-hidden="true"></i></b-col>
                             <b-col cols="8"><span class="item-desc">[[ item.desc ]]</span></b-col>
                             <b-col>
-                                <span class="item-currency">[[ item.currency ]]</span>
-                                <span class="item-value">[[ item.value ]]</span>
+                                <span class="item-value-out">[[ item.value ]][[ item.currency ]]</span>
                             </b-col>
                         </b-row>
                         <b-collapse v-bind:id="'item_' + [[ item.id ]] + '_collapse'">
@@ -76,7 +78,7 @@
             </div>
         </div>
         <div class="row c-row-upper" id="comes-menu">
-            <div class="col-md c-col">
+            <b-col>
                 <b-input-group prepend="New income">
                     <b-form-select v-model="incomes.selected" :options="incomes.options" class="c-new-item-select"></b-form-select>
                     <b-form-input v-model="incomes.value" type="number"></b-form-input>
@@ -84,8 +86,8 @@
                         <b-button variant="success" @click="add_item('in')">+</b-button>
                     </b-input-group-append>
                 </b-input-group>
-            </div>
-            <div class="col-md c-col">
+            </b-col>
+            <b-col>
                 <b-input-group prepend="New outcome">
                     <b-form-select v-model="outcomes.selected" :options="outcomes.options" class="c-new-item-select"></b-form-select>
                     <b-form-input v-model="outcomes.value" type="number"></b-form-input>
@@ -93,8 +95,20 @@
                         <b-button variant="danger" @click="add_item('out')">+</b-button>
                     </b-input-group-append>
                 </b-input-group>
-            </div>
-            </div>
+            </b-col>
+        </div>
+        <div class="row c-row-upper c-row-down" id="comes-stats">
+            <b-col>
+            </b-col>
+            <b-col cols="4">
+                <b-card title="Balance" class="text-right" v-model="summary">
+                    <b-list-group flush>
+                        <b-list-group-item class="text-success"><span class="float-left">+</span>[[ summary.income ]][[ summary.currency ]]</b-list-group-item>
+                        <b-list-group-item class="text-danger"><span class="float-left">-</span>[[ summary.outcome ]][[ summary.currency ]]</b-list-group-item>
+                        <b-list-group-item class="text-dark">[[ summary.balance ]][[ summary.currency ]]</b-list-group-item>
+                    </b-list-group>
+                </b-card>
+            </b-col>
         </div>
     </div>
 
