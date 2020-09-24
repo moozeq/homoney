@@ -1,12 +1,11 @@
-import json
 import pickle
 from typing import Dict, List, Union, Optional
 
 from src.items import Item
 
-months = {
+months = [
     'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'
-}
+]
 
 
 class WrongDataType(Exception):
@@ -80,15 +79,21 @@ class Account:
         self.items_cnt += 1
         return item
 
-    def rm(self, item_id: int, item_type: str, month: str) -> bool:
+    def rm(self, item: dict, month: str) -> bool:
+        item_id = item['id']
+        item_type = item['type']
         prev_len = len(self._items[item_type][month])
         self._items[item_type][month] = [item for item in self._items[item_type][month] if item.id != item_id]
         cur_len = len(self._items[item_type][month])
         return True if prev_len - cur_len > 0 else False
         
-    def clear(self):
+    def clear(self, month: str = None):
         for items_type in ['in', 'out']:
-            for month in months:
+            if month:
+                months_to_clear = [month]
+            else:
+                months_to_clear = months
+            for month in months_to_clear:
                 items = self._items[items_type][month]
                 items.clear()
 

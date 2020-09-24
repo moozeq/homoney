@@ -2,11 +2,16 @@
 
 import argparse
 import json
+from typing import Dict
 
 from flask import Flask, render_template, request
-from src.account import Account
+from src.account import Account, months
 from src.items import WrongTypeItem, WrongItem, Item
 from src.items import incomes as available_incomes, outcomes as available_outcomes
+
+
+class WrongRequest(Exception):
+    pass
 
 
 class WrongEnvironment(Exception):
@@ -37,6 +42,13 @@ def create_app(cfg: dict):
 
     app.config['ENV'] = cfg['ENV']
 
+    @app.context_processor
+    def inject_globals():
+        return {
+            'home': f'http://{cfg["HOST"]}:{cfg["PORT"]}',
+            'months': months
+        }
+
     acc_name = '1337'
     acc = Account(acc_name)
 
@@ -44,24 +56,30 @@ def create_app(cfg: dict):
     def index():
         return render_template('index.html')
 
-    @app.route('/api/incomes')
+    @app.route('/api/incomes', methods=['POST'])
     def incomes():
+        data = request.get_json()
+        current_month = data['date']['month']
         return {
-            'items': acc.get_comes('in', 'web')['JAN']
+            'items': acc.get_comes('in', 'web')[current_month]
         }
         
-    @app.route('/api/outcomes')
+    @app.route('/api/outcomes', methods=['POST'])
     def outcomes():
+        data = request.get_json()
+        current_month = data['date']['month']
         return {
-            'items': acc.get_comes('out', 'web')['JAN']
+            'items': acc.get_comes('out', 'web')[current_month]
         }
 
-    @app.route('/api/balance')
+    @app.route('/api/balance', methods=['POST'])
     def balance():
+        data = request.get_json()
+        current_month = data['date']['month']
         return {
-            'income': acc.get_comes('in', 'value')['JAN'],
-            'outcome': acc.get_comes('out', 'value')['JAN'],
-            'balance': acc.balances['JAN'],
+            'income': acc.get_comes('in', 'value')[current_month],
+            'outcome': acc.get_comes('out', 'value')[current_month],
+            'balance': acc.balances[current_month],
             'currency': '$'
         }
 
@@ -97,13 +115,36 @@ def create_app(cfg: dict):
 
     @app.route('/api/clear', methods=['POST'])
     def clear():
-        acc.clear()
+        data = request.get_json()
+        count = data['count']
+        current_month = data['date']['month']
+        if count == 'single':
+            months_to_clear = [current_month]
+        elif count == 'multi':
+            months_to_clear = months
+        else:
+            raise WrongRequest(f'Wrong request, key "count" invalid')
+        for month in months_to_clear:
+            acc.clear(month)
         return {'success': True}, 200, {'ContentType': 'application/json'}
 
     @app.route('/api/add', methods=['POST'])
     def add():
         data = request.get_json()
-        item: Item = acc.add(data, data['date']['month'])
+        count = data['count']
+        current_month = data['date']['month']
+        if count == 'single':
+            months_to_add = [current_month]
+        elif count == 'multi':
+            months_to_add = months
+        else:
+            raise WrongRequest(f'Wrong request, key "count" invalid')
+
+        items: Dict[str, Item] = {
+            month: acc.add(data, month)
+            for month in months_to_add
+        }
+        item = items[current_month]
 
         if not item:
             raise WrongItem(f'Item could not be add')
@@ -118,10 +159,11 @@ def create_app(cfg: dict):
     @app.route('/api/rm', methods=['POST'])
     def rm():
         data = request.get_json()
-        deleted = acc.rm(data['id'], data['type'], data['date']['month'])
+        current_month = data['date']['month']
+        deleted = acc.rm(data, current_month)
         return {'success': deleted}, 200, {'ContentType': 'application/json'}
 
-    app.run(host=cfg['host'], port=cfg['port'])
+    app.run(host=cfg['HOST'], port=cfg['PORT'])
 
 
 if __name__ == '__main__':

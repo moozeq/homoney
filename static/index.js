@@ -1,4 +1,5 @@
-var date = {'month': 'JAN'};
+var today = new Date();
+var date = {'month': months[today.getMonth()]};
 
 var incomes = new Vue({
   el: '#incomes',
@@ -13,9 +14,10 @@ var incomes = new Vue({
   methods: {
     init: function() {
         axios
-          .get('/api/incomes')
+          .post('/api/incomes', {
+            'date': date
+          })
           .then(response => {
-            //console.log(response.data.items);
             this.items = response.data.items;
           });
     },
@@ -48,9 +50,10 @@ var outcomes = new Vue({
   methods: {
     init: function() {
         axios
-          .get('/api/outcomes')
+          .post('/api/outcomes', {
+            'date': date
+          })
           .then(response => {
-            //console.log(response.data.items);
             this.items = response.data.items;
           });
     },
@@ -102,7 +105,7 @@ var incomes_menu = new Vue({
                 this.outcomes.options = this.outcomes.options.concat(response.data.out);
           });
     },
-    add_item: function(type) {
+    add_item: function(type, count) {
         if (type == 'in') {
             data = incomes;
             type_str = 'income';
@@ -143,6 +146,7 @@ var incomes_menu = new Vue({
             'name': container.selected,
             'item_type': type,
             'value': parseInt(container.value),
+            'count': count,
             'date': date
           })
           .then(response => {
@@ -157,14 +161,73 @@ var incomes_menu = new Vue({
   delimiters: ['[[', ']]']
 })
 
+var comes_stats = new Vue({
+  el: '#comes-stats',
+  data() {
+    return {
+        summary: {
+            income: null,
+            outcome: null,
+            balance: null,
+            currency: null
+        }
+    }
+  },
+  methods: {
+    update() {
+        axios
+          .post('/api/balance', {
+            'date': date
+          })
+          .then(response => {
+                this.summary.income = response.data.income;
+                this.summary.outcome = response.data.outcome;
+                this.summary.balance = response.data.balance;
+                this.summary.currency = response.data.currency;
+          });
+    }
+  },
+  mounted: function() {
+    this.update()
+  },
+  delimiters: ['[[', ']]']
+})
+
 var navbar = new Vue({
   el: '#navbar',
+  data() {
+    return {
+        date: {
+           months: [
+            { value: 'JAN', text: 'January' },
+            { value: 'FEB', text: 'February' },
+            { value: 'MAR', text: 'March' },
+            { value: 'APR', text: 'April' },
+            { value: 'MAY', text: 'May' },
+            { value: 'JUN', text: 'June' },
+            { value: 'JUL', text: 'July' },
+            { value: 'AUG', text: 'August' },
+            { value: 'SEP', text: 'September' },
+            { value: 'OCT', text: 'October' },
+            { value: 'NOV', text: 'November' },
+            { value: 'DEC', text: 'December' }
+           ],
+           selected: date['month'],
+        }
+    }
+  },
   methods: {
     refresh() {
+        incomes.init();
+        outcomes.init();
+        comes_stats.update();
+    },
+    hard_refresh() {
         window.location.reload(true);
-        //incomes.init();
-        //outcomes.init();
-        //comes_stats.update();
+    },
+    update_date() {
+        date['month'] = this.date.selected;
+        this.refresh();
     },
     save() {
         axios
@@ -189,11 +252,14 @@ var navbar = new Vue({
               autoHideDelay: 2000
             });
           });
-        this.refresh();
+        this.hard_refresh();
     },
-    clear() {
+    clear(count) {
         axios
-          .post('/api/clear')
+          .post('/api/clear', {
+            date: date,
+            count: count
+          })
           .then(response => {
             this.$bvToast.toast(`All data has been cleared`, {
               title: 'Success',
@@ -208,34 +274,4 @@ var navbar = new Vue({
         console.log('Not implemented');
     }
   }
-})
-
-var comes_stats = new Vue({
-  el: '#comes-stats',
-  data() {
-    return {
-        summary: {
-            income: null,
-            outcome: null,
-            balance: null,
-            currency: null
-        }
-    }
-  },
-  methods: {
-    update() {
-        axios
-          .get('/api/balance')
-          .then(response => {
-                this.summary.income = response.data.income;
-                this.summary.outcome = response.data.outcome;
-                this.summary.balance = response.data.balance;
-                this.summary.currency = response.data.currency;
-          });
-    }
-  },
-  mounted: function() {
-    this.update()
-  },
-  delimiters: ['[[', ']]']
 })

@@ -25,15 +25,19 @@
 
     <!-- Load material design icons -->
     <link type="text/css" rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" />
+
+    <script>const months = {{months | safe}}</script>
 </head>
 <body>
 
     <b-navbar toggleable="lg" type="dark" variant="dark" id="navbar" sticky="true">
-        <b-navbar-brand href="#">Homoney</b-navbar-brand>
+        <b-navbar-brand href="{{ home }}">Homoney</b-navbar-brand>
         <b-navbar-nav class="ml-auto">
+            <b-nav-item><b-form-select v-model="date.selected" :options="date.months" @input="update_date()"></b-form-select></b-nav-item>
             <b-nav-item><b-button variant="outline-success" @click="save()">Save</b-button></b-nav-item>
             <b-nav-item><b-button variant="outline-warning" @click="load()">Load</b-button></b-nav-item>
-            <b-nav-item><b-button variant="outline-danger" @click="clear()">Clear</b-button></b-nav-item>
+            <b-nav-item><b-button v-b-tooltip.hover title="Clear this month" variant="outline-danger" @click="clear('single')">Clear</b-button></b-nav-item>
+            <b-nav-item><b-button v-b-tooltip.hover title="Clear all months" variant="danger" @click="clear('multi')">Clear</b-button></b-nav-item>
             <b-nav-item><b-button variant="outline-secondary" @click="logout()">Logout</b-button></b-nav-item>
         </b-navbar-nav>
     </b-navbar>
@@ -87,7 +91,8 @@
                     <b-form-select v-model="incomes.selected" :options="incomes.options" class="c-new-item-select"></b-form-select>
                     <b-form-input v-model="incomes.value" type="number"></b-form-input>
                     <b-input-group-append>
-                        <b-button variant="success" @click="add_item('in')">+</b-button>
+                        <b-button v-b-tooltip.hover title="Add income to this month" variant="outline-success" @click="add_item('in', 'single')">+</b-button>
+                        <b-button v-b-tooltip.hover title="Add income to all months" variant="success" @click="add_item('in', 'multi')">+</b-button>
                     </b-input-group-append>
                 </b-input-group>
             </b-col>
@@ -96,15 +101,14 @@
                     <b-form-select v-model="outcomes.selected" :options="outcomes.options" class="c-new-item-select"></b-form-select>
                     <b-form-input v-model="outcomes.value" type="number"></b-form-input>
                     <b-input-group-append>
-                        <b-button variant="danger" @click="add_item('out')">+</b-button>
+                        <b-button v-b-tooltip.hover title="Add outcome to this month" variant="outline-danger" @click="add_item('out', 'single')">+</b-button>
+                        <b-button v-b-tooltip.hover title="Add outcome to all months" variant="danger" @click="add_item('out', 'multi')">+</b-button>
                     </b-input-group-append>
                 </b-input-group>
             </b-col>
         </div>
         <div class="row c-row-upper c-row-down" id="comes-stats">
-            <b-col>
-            </b-col>
-            <b-col cols="4">
+            <b-col cols="3" offset="9">
                 <b-card title="Balance" class="text-right" v-model="summary">
                     <b-list-group flush>
                         <b-list-group-item class="text-success"><span class="float-left">+</span>[[ summary.income ]][[ summary.currency ]]</b-list-group-item>
