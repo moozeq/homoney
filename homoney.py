@@ -37,7 +37,8 @@ def create_app(cfg: dict):
 
     app.config['ENV'] = cfg['ENV']
 
-    acc = Account('1337')
+    acc_name = '1337'
+    acc = Account(acc_name)
 
     @app.route('/')
     def index():
@@ -82,6 +83,22 @@ def create_app(cfg: dict):
                 } for come_name in available_outcomes
             ]
         }
+
+    @app.route('/api/save', methods=['POST'])
+    def save():
+        acc.save()
+        return {'success': True}, 200, {'ContentType': 'application/json'}
+
+    @app.route('/api/load', methods=['POST'])
+    def load():
+        nonlocal acc
+        acc = Account.load(f'data/{acc_name}.pickle')
+        return {'success': True}, 200, {'ContentType': 'application/json'}
+
+    @app.route('/api/clear', methods=['POST'])
+    def clear():
+        acc.clear()
+        return {'success': True}, 200, {'ContentType': 'application/json'}
 
     @app.route('/api/add', methods=['POST'])
     def add():

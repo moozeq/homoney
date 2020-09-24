@@ -8,13 +8,17 @@ var incomes = new Vue({
     }
   },
   mounted () {
-    axios
-      .get('/api/incomes')
-      .then(response => {
-        this.items = response.data.items;
-      })
+    this.init();
   },
   methods: {
+    init: function() {
+        axios
+          .get('/api/incomes')
+          .then(response => {
+            //console.log(response.data.items);
+            this.items = response.data.items;
+          });
+    },
     rm_item: function(id) {
         axios
           .post('/api/rm', {
@@ -24,7 +28,8 @@ var incomes = new Vue({
           })
           .then(response => {
             this.$delete(this.items, id);
-          })
+            comes_stats.update();
+          });
     }
   },
   delimiters: ['[[', ']]']
@@ -38,13 +43,17 @@ var outcomes = new Vue({
     }
   },
   mounted () {
-    axios
-      .get('/api/outcomes')
-      .then(response => {
-        this.items = response.data.items;
-      })
+    this.init();
   },
   methods: {
+    init: function() {
+        axios
+          .get('/api/outcomes')
+          .then(response => {
+            //console.log(response.data.items);
+            this.items = response.data.items;
+          });
+    },
     rm_item: function(id) {
         axios
           .post('/api/rm', {
@@ -54,7 +63,8 @@ var outcomes = new Vue({
           })
           .then(response => {
             this.$delete(this.items, id);
-          })
+            comes_stats.update();
+          });
     }
   },
   delimiters: ['[[', ']]']
@@ -81,14 +91,17 @@ var incomes_menu = new Vue({
      }
   },
   mounted () {
-    axios
-      .get('/api/available')
-      .then(response => {
-            this.incomes.options = this.incomes.options.concat(response.data.in);
-            this.outcomes.options = this.outcomes.options.concat(response.data.out);
-      })
+    this.init();
   },
   methods: {
+    init: function() {
+        axios
+          .get('/api/available')
+          .then(response => {
+                this.incomes.options = this.incomes.options.concat(response.data.in);
+                this.outcomes.options = this.outcomes.options.concat(response.data.out);
+          });
+    },
     add_item: function(type) {
         if (type == 'in') {
             data = incomes;
@@ -137,15 +150,64 @@ var incomes_menu = new Vue({
             this.$nextTick(() => {
                 data.$el.scrollTop = data.$el.scrollHeight;
             });
-            comes_stats.update_balance();
-          })
+            comes_stats.update();
+          });
     }
   },
   delimiters: ['[[', ']]']
 })
 
 var navbar = new Vue({
-  el: '#navbar'
+  el: '#navbar',
+  methods: {
+    refresh() {
+        window.location.reload(true);
+        //incomes.init();
+        //outcomes.init();
+        //comes_stats.update();
+    },
+    save() {
+        axios
+          .post('/api/save')
+          .then(response => {
+            this.$bvToast.toast(`Your data has been saved`, {
+              title: 'Success',
+              variant: 'success',
+              toaster: 'b-toaster-bottom-left',
+              autoHideDelay: 2000
+            });
+          });
+    },
+    load() {
+        axios
+          .post('/api/load')
+          .then(response => {
+            this.$bvToast.toast(`Saved data has been loaded`, {
+              title: 'Success',
+              variant: 'success',
+              toaster: 'b-toaster-bottom-left',
+              autoHideDelay: 2000
+            });
+          });
+        this.refresh();
+    },
+    clear() {
+        axios
+          .post('/api/clear')
+          .then(response => {
+            this.$bvToast.toast(`All data has been cleared`, {
+              title: 'Success',
+              variant: 'success',
+              toaster: 'b-toaster-bottom-left',
+              autoHideDelay: 2000
+            });
+          });
+        this.refresh();
+    },
+    logout() {
+        console.log('Not implemented');
+    }
+  }
 })
 
 var comes_stats = new Vue({
@@ -161,7 +223,7 @@ var comes_stats = new Vue({
     }
   },
   methods: {
-    update_balance() {
+    update() {
         axios
           .get('/api/balance')
           .then(response => {
@@ -169,11 +231,11 @@ var comes_stats = new Vue({
                 this.summary.outcome = response.data.outcome;
                 this.summary.balance = response.data.balance;
                 this.summary.currency = response.data.currency;
-          })
+          });
     }
   },
   mounted: function() {
-    this.update_balance()
+    this.update()
   },
   delimiters: ['[[', ']]']
 })

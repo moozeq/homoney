@@ -1,3 +1,5 @@
+import json
+import pickle
 from typing import Dict, List, Union, Optional
 
 from src.items import Item
@@ -18,12 +20,11 @@ class Account:
     """
     def __init__(self, name: str):
         self.name = name
+        self.filename = f'data/{self.name}.pickle'
         self.items_cnt = 0
-        self._outcomes_items: Dict[str, List[Item]] = {month: [] for month in months}
-        self._incomes_items: Dict[str, List[Item]] = {month: [] for month in months}
-        self._items = {
-            'in': self._incomes_items,
-            'out': self._outcomes_items
+        self._items: Dict[str, Dict[str, List[Item]]] = {
+            'in': {month: [] for month in months},
+            'out': {month: [] for month in months}
         }
 
     def get_comes(self, come_type: str, data_type: str) -> Dict[str, Union[int, List[Item], List[dict]]]:
@@ -34,9 +35,9 @@ class Account:
             - 'web':    web dictionary
         """
         if come_type == 'in':
-            items = self._incomes_items
+            items = self._items['in']
         elif come_type == 'out':
-            items = self._outcomes_items
+            items = self._items['out']
         else:
             raise WrongDataType(f'Wrong come type provided: {come_type}')
 
@@ -85,7 +86,17 @@ class Account:
         cur_len = len(self._items[item_type][month])
         return True if prev_len - cur_len > 0 else False
         
-    def clear(self, month: str):
+    def clear(self):
         for items_type in ['in', 'out']:
-            items = self._items[items_type][month]
-            items.clear()
+            for month in months:
+                items = self._items[items_type][month]
+                items.clear()
+
+    def save(self):
+        with open(self.filename, 'wb') as file:
+            pickle.dump(self, file)
+
+    @staticmethod
+    def load(filename: str) -> 'Account':
+        with open(filename, 'rb') as file:
+            return pickle.load(file)
